@@ -1,29 +1,65 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Coffee Shop Premium Theme
+ * Inspired by artisanal coffee aesthetics - warm, sophisticated, inviting
  */
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// Coffee Shop Color Palette
+export const CoffeeColors = {
+  // Primary - Deep espresso tones
+  espresso: '#1C1210',
+  darkRoast: '#2D1F1A',
+  mediumRoast: '#4A3728',
+
+  // Secondary - Warm creamy tones
+  cream: '#F7F3EE',
+  latte: '#E8DFD4',
+  cappuccino: '#D4C4B0',
+
+  // Accent - Rich golden & caramel
+  caramel: '#C69C6D',
+  honey: '#D4A853',
+  cinnamon: '#8B5A2B',
+
+  // Semantic
+  success: '#5D7A5D',
+  error: '#A65D5D',
+};
+
+const tintColorLight = CoffeeColors.caramel;
+const tintColorDark = CoffeeColors.honey;
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: CoffeeColors.espresso,
+    textSecondary: CoffeeColors.mediumRoast,
+    textMuted: '#8B7355',
+    background: CoffeeColors.cream,
+    backgroundSecondary: CoffeeColors.latte,
+    card: '#FFFFFF',
+    cardBorder: 'rgba(139, 115, 85, 0.12)',
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    icon: CoffeeColors.mediumRoast,
+    tabIconDefault: CoffeeColors.cappuccino,
     tabIconSelected: tintColorLight,
+    accent: CoffeeColors.caramel,
+    accentLight: 'rgba(198, 156, 109, 0.15)',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
+    text: CoffeeColors.cream,
+    textSecondary: CoffeeColors.cappuccino,
+    textMuted: '#9B8B7A',
+    background: CoffeeColors.espresso,
+    backgroundSecondary: CoffeeColors.darkRoast,
+    card: '#2A1F1A',
+    cardBorder: 'rgba(212, 196, 176, 0.08)',
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    icon: CoffeeColors.cappuccino,
+    tabIconDefault: '#6B5B4F',
     tabIconSelected: tintColorDark,
+    accent: CoffeeColors.honey,
+    accentLight: 'rgba(212, 168, 83, 0.12)',
   },
 };
 
