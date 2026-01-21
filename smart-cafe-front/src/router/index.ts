@@ -5,8 +5,9 @@ import { useGetMe } from '@/composable/API/Auth/useGetMe'
 
 // Import des vues
 import LoginView from '@/views/LoginView.vue'
+import DashboardView from '@/views/DashboardView.vue'
 import ManageOrderView from '@/views/ManageOrderView.vue'
-import TakeOrderView from '@/views/TakeOrderView.vue'
+import StoreUserView from '@/views/Admin/User/StoreUserView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,15 +21,21 @@ const routes: RouteRecordRaw[] = [
     meta: { guest: true },
   },
   {
-    path: '/takeorder',
-    name: 'takeorder',
-    component: TakeOrderView,
+    path: '/dashboard',
+    name: 'dashboard',
+    component: DashboardView,
     meta: { requiresAuth: true },
   },
   {
     path: '/manageorder',
     name: 'manageorder',
     component: ManageOrderView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/users/create',
+    name: 'admin-users-create',
+    component: StoreUserView,
     meta: { requiresAuth: true },
   },
 ]
@@ -64,7 +71,7 @@ router.beforeEach(async (to, _from, next) => {
     next({ name: 'login' })
   } else if (to.meta.guest && isAuthenticated) {
     // Page guest (login) mais déjà connecté -> redirection
-    next({ name: 'takeorder' })
+    next({ name: 'dashboard' })
   } else {
     next()
   }
