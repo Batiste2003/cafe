@@ -104,7 +104,7 @@ const handleBackdropClick = () => {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 0;
   overflow-y: auto;
 }
 

@@ -101,7 +101,7 @@ class ProductVariantController extends Controller
     {
         Gate::authorize('view', $variant);
 
-        $variant->load(['product', 'gallery', 'optionValues']);
+        $variant->load(['product', 'gallery', 'optionValues', 'storeStocks.store']);
 
         return $this->successService->execute(
             message: 'Variant récupéré avec succès.',

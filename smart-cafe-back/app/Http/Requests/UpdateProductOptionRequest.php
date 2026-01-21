@@ -33,6 +33,21 @@ class UpdateProductOptionRequest extends FormRequest
                 'sometimes',
                 'boolean',
             ],
+            'values' => [
+                'sometimes',
+                'array',
+                'min:1',
+            ],
+            'values.*.value' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'values.*.price_add_cent_ht' => [
+                'nullable',
+                'integer',
+                'min:0',
+            ],
         ];
     }
 
@@ -46,6 +61,12 @@ class UpdateProductOptionRequest extends FormRequest
         return [
             'name.min' => 'Le nom de l\'option doit contenir au moins :min caractère.',
             'name.max' => 'Le nom de l\'option ne peut pas dépasser :max caractères.',
+            'values.array' => 'Les valeurs doivent être un tableau.',
+            'values.min' => 'Vous devez fournir au moins une valeur.',
+            'values.*.value.required' => 'La valeur est obligatoire.',
+            'values.*.value.max' => 'La valeur ne peut pas dépasser :max caractères.',
+            'values.*.price_add_cent_ht.integer' => 'Le prix additionnel doit être un nombre entier.',
+            'values.*.price_add_cent_ht.min' => 'Le prix additionnel ne peut pas être négatif.',
         ];
     }
 }

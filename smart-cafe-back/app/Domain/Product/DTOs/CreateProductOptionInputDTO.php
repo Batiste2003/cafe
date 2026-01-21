@@ -4,9 +4,13 @@ namespace App\Domain\Product\DTOs;
 
 readonly class CreateProductOptionInputDTO
 {
+    /**
+     * @param  array<int, array{value: string, price_add_cent_ht?: int}>  $values
+     */
     public function __construct(
         public string $name,
         public bool $isRequired = false,
+        public array $values = [],
     ) {}
 
     /**
@@ -17,6 +21,7 @@ readonly class CreateProductOptionInputDTO
         return new self(
             name: $data['name'],
             isRequired: $data['is_required'] ?? false,
+            values: $data['values'] ?? [],
         );
     }
 
@@ -28,6 +33,7 @@ readonly class CreateProductOptionInputDTO
         return [
             'name' => $this->name,
             'is_required' => $this->isRequired,
+            'values' => $this->values,
         ];
     }
 }

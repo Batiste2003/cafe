@@ -42,6 +42,8 @@ Route::prefix('admin')->middleware(['role:'.UserRoleEnum::ADMIN->value])->group(
         Route::delete('/{store}', [StoreController::class, 'destroy']);
         Route::post('/{store}/users', [StoreController::class, 'attachUsers']);
         Route::delete('/{store}/users/{user}', [StoreController::class, 'detachUser']);
+        Route::get('/{store}/variant-stocks', [StoreController::class, 'variantStocks']);
+        Route::get('/{store}/products', [StoreController::class, 'products']);
     });
 
     // Gestion des catégories de produits

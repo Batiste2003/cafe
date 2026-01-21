@@ -12,6 +12,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class ListProductCategoriesService
 {
     /**
+     * Profondeur maximale pour éviter les boucles infinies.
+     */
+    private const MAX_DEPTH = 10;
+
+    /**
      * Liste les catégories avec filtres et pagination.
      *
      * @param  ListProductCategoriesFilterDTO  $filters  Les critères de filtrage
@@ -19,7 +24,10 @@ class ListProductCategoriesService
      */
     public function execute(ListProductCategoriesFilterDTO $filters): LengthAwarePaginator
     {
-        $query = ProductCategory::query()->with(['parent', 'children']);
+        $query = ProductCategory::query()->with(['parent']);
+
+        // Load children recursively with depth limit
+        $query->with($this->getChildrenRelations());
 
         if ($filters->withTrashed) {
             $query->withTrashed();
@@ -43,5 +51,24 @@ class ListProductCategoriesService
         }
 
         return $query->orderBy('name', 'asc')->paginate($filters->perPage);
+    }
+
+    /**
+     * Génère les relations imbriquées pour charger les enfants récursivement.
+     * Limite à MAX_DEPTH niveaux pour éviter les boucles infinies.
+     *
+     * @return array<string>
+     */
+    private function getChildrenRelations(): array
+    {
+        $relations = [];
+        $relation = 'children';
+
+        for ($i = 0; $i < self::MAX_DEPTH; $i++) {
+            $relations[] = $relation;
+            $relation .= '.children';
+        }
+
+        return $relations;
     }
 }
