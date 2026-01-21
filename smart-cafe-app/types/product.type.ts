@@ -15,6 +15,7 @@ export interface ProductVariant {
   is_default: boolean;
   is_active?: boolean;
   stock_quantity?: number;
+  options?: ProductOptions[];
 }
 
 export interface ProductCategory {
@@ -35,6 +36,7 @@ export interface Product {
   category?: ProductCategory;
   default_variant?: ProductVariant;
   variants?: ProductVariant[];
+  options?: ProductOptions[];
   gallery?: Gallery[];
   stores?: any[];
   created_at: string;
@@ -53,6 +55,22 @@ export interface ProductsApiResponse {
     from: number;
     to: number;
   };
+}
+
+export interface ProductOptions{
+  id: number;
+  product_id: number;
+  name: string;
+  is_required: boolean;
+  values: ProductOptionsValue[];
+}
+
+export interface ProductOptionsValue {
+  id: number;
+  product_option_id: number;
+  value: string;
+  price_add_cent_ht: number;
+  price_add_euros: number;
 }
 
 // Component interface for CafeCard

@@ -4,9 +4,13 @@ namespace App\Domain\Product\DTOs;
 
 readonly class UpdateProductOptionInputDTO
 {
+    /**
+     * @param  array<int, array{value: string, price_add_cent_ht?: int}>|null  $values
+     */
     public function __construct(
         public ?string $name = null,
         public ?bool $isRequired = null,
+        public ?array $values = null,
     ) {}
 
     /**
@@ -17,6 +21,7 @@ readonly class UpdateProductOptionInputDTO
         return new self(
             name: $data['name'] ?? null,
             isRequired: $data['is_required'] ?? null,
+            values: $data['values'] ?? null,
         );
     }
 
@@ -33,6 +38,10 @@ readonly class UpdateProductOptionInputDTO
 
         if ($this->isRequired !== null) {
             $data['is_required'] = $this->isRequired;
+        }
+
+        if ($this->values !== null) {
+            $data['values'] = $this->values;
         }
 
         return $data;

@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import DashboardLayout from '@/layout/DashboardLayout.vue'
+import SectionIndexStore from '@/components/Stores/SectionIndexStore.vue'
 import SectionIndexUser from '@/components/Users/SectionIndexUser.vue'
-import { useGetShowUser } from '@/composable/API/Admin/Users/useGetShowUser.ts'
-import { onMounted } from 'vue'
-
-const { execute } = useGetShowUser(2)
-
-onMounted(async () => {
-  const result = await execute()
-  console.log(result)
-})
+import SectionIndexProductCategory from '@/components/ProductCategories/SectionIndexProductCategory.vue'
+import SectionIndexProduct from '@/components/Products/SectionIndexProduct.vue'
 </script>
 
 <template>
   <DashboardLayout>
     <template #breadcrumb>Dashboard</template>
 
-    <SectionIndexUser />
+    <div class="space-y-6">
+      <SectionIndexUser />
+      <SectionIndexStore />
+      <SectionIndexProductCategory />
+      <SectionIndexProduct />
+    </div>
   </DashboardLayout>
 </template>

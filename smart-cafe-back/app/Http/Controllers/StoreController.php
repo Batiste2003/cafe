@@ -23,6 +23,8 @@ use App\Domain\UploadedFile\Services\ProcessUploadedFileService;
 use App\Http\Requests\AttachUsersToStoreRequest;
 use App\Http\Requests\StoreStoreRequest;
 use App\Http\Requests\UpdateStoreRequest;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\StoreProductVariantResource;
 use App\Http\Resources\StoreResource;
 use App\Models\Store;
 use App\Models\User;
@@ -305,6 +307,46 @@ class StoreController extends Controller
         return $this->successService->execute(
             message: StoreConstant::USER_DETACHED,
             data: new StoreResource($updatedStore),
+        );
+    }
+
+    /**
+     * Liste les stocks des variantes pour un magasin.
+     *
+     * @param  Store  $store  Le magasin concerné
+     * @return JsonResponse Liste des stocks de variantes avec leurs relations
+     */
+    public function variantStocks(Store $store): JsonResponse
+    {
+        Gate::authorize('view', $store);
+
+        $variantStocks = $store->variantStocks()
+            ->with(['variant.product', 'variant.gallery'])
+            ->get();
+
+        return $this->successService->execute(
+            message: StoreConstant::VARIANT_STOCKS_RETRIEVED,
+            data: StoreProductVariantResource::collection($variantStocks),
+        );
+    }
+
+    /**
+     * Liste les produits avec leurs variantes pour un magasin.
+     *
+     * @param  Store  $store  Le magasin concerné
+     * @return JsonResponse Liste des produits avec leurs variantes
+     */
+    public function products(Store $store): JsonResponse
+    {
+        Gate::authorize('view', $store);
+
+        $products = $store->products()
+            ->with(['variants.gallery', 'variants.storeStocks'])
+            ->get();
+
+        return $this->successService->execute(
+            message: StoreConstant::STORE_PRODUCTS_RETRIEVED,
+            data: ProductResource::collection($products),
         );
     }
 }

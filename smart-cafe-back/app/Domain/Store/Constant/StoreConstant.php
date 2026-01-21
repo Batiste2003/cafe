@@ -26,6 +26,10 @@ final class StoreConstant
     public const string USER_ALREADY_ATTACHED = 'Utilisateur déjà associé à ce magasin.';
     public const string USER_NOT_ATTACHED = 'Utilisateur non associé à ce magasin.';
 
+    // Variant stock messages
+    public const string VARIANT_STOCKS_RETRIEVED = 'Stocks des variantes récupérés avec succès.';
+    public const string STORE_PRODUCTS_RETRIEVED = 'Produits du magasin récupérés avec succès.';
+
     // Error messages
     public const string EMPLOYER_ALREADY_HAS_STORE = 'Un employé ne peut être associé qu\'à un seul magasin.';
     public const string CANNOT_ATTACH_ADMIN = 'Un administrateur ne peut pas être associé à un magasin.';

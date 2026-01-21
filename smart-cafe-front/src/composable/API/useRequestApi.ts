@@ -101,6 +101,88 @@ export function useRequestApi() {
     }
   };
 
+  const postFormData = async <T>(
+    endpoint: string,
+    formData: FormData,
+    config: AxiosRequestConfig = {},
+    token: string | null = null
+  ): Promise<ApiResult<T>> => {
+    try {
+      await delay(500);
+      const authToken = token || authStore.authToken;
+      const response = await axios.post<ApiSuccessResponse<T>>(`${baseURL}${endpoint}`, formData, {
+        ...config,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: authToken ? `Bearer ${authToken}` : '',
+          ...config.headers,
+        },
+      });
+
+      return {
+        data: response.data.data,
+        message: response.data.message,
+        success: response.data.success,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: undefined,
+          message: error.response?.data?.message || "Erreur lors de l'envoi du formulaire",
+          success: false,
+        };
+      }
+      return {
+        data: undefined,
+        message: "Erreur lors de l'envoi du formulaire",
+        success: false,
+      };
+    }
+  };
+
+  const putFormData = async <T>(
+    endpoint: string,
+    formData: FormData,
+    config: AxiosRequestConfig = {},
+    token: string | null = null
+  ): Promise<ApiResult<T>> => {
+    try {
+      await delay(500);
+      const authToken = token || authStore.authToken;
+
+      // Laravel needs _method=PUT for multipart/form-data PUT requests
+      formData.append('_method', 'PUT');
+
+      const response = await axios.post<ApiSuccessResponse<T>>(`${baseURL}${endpoint}`, formData, {
+        ...config,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: authToken ? `Bearer ${authToken}` : '',
+          ...config.headers,
+        },
+      });
+
+      return {
+        data: response.data.data,
+        message: response.data.message,
+        success: response.data.success,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: undefined,
+          message: error.response?.data?.message || "Erreur lors de la mise à jour",
+          success: false,
+        };
+      }
+      return {
+        data: undefined,
+        message: "Erreur lors de la mise à jour",
+        success: false,
+      };
+    }
+  };
+
   const put = async <T>(
     endpoint: string,
     data: Record<string, unknown>,
@@ -326,7 +408,9 @@ export function useRequestApi() {
   return {
     get,
     post,
+    postFormData,
     put,
+    putFormData,
     login,
     fetchCsrfToken,
     del,

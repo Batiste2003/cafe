@@ -42,7 +42,61 @@ const routes: RouteRecordRaw[] = [
     path: '/admin/users/:id',
     name: 'admin-user-show',
     component: () => import('@/views/Admin/User/ShowUserView.vue'),
-    meta: { requiresAuth: true }, 
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/stores',
+    name: 'admin-stores-index',
+    component: () => import('@/views/Admin/Store/IndexStoreView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/stores/create',
+    name: 'admin-stores-create',
+    component: () => import('@/views/Admin/Store/StoreStoreView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/stores/:id',
+    name: 'admin-store-show',
+    component: () => import('@/views/Admin/Store/ShowStoreView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/product-categories',
+    name: 'admin-product-categories-index',
+    component: () => import('@/views/Admin/ProductCategory/IndexProductCategoryView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/product-categories/:id',
+    name: 'admin-product-category-show',
+    component: () => import('@/views/Admin/ProductCategory/ShowProductCategoryView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/products',
+    name: 'admin-products-index',
+    component: () => import('@/views/Admin/Product/IndexProductView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/products/:id',
+    name: 'admin-product-show',
+    component: () => import('@/views/Admin/Product/ShowProductView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/products/:productId/variants',
+    name: 'admin-product-variants-index',
+    component: () => import('@/views/Admin/ProductVariant/IndexProductVariantView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/products/:productId/variants/:id',
+    name: 'admin-product-variant-show',
+    component: () => import('@/views/Admin/ProductVariant/ShowProductVariantView.vue'),
+    meta: { requiresAuth: true },
   }
 ]
 

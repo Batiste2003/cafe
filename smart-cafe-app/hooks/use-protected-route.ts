@@ -11,10 +11,11 @@ export function useProtectedRoute() {
     if (loading) return;
 
     const inAuthGroup = segments[0] === '(tabs)';
+    const inProductGroup = segments[0] === 'product';
 
     if (!isAuthenticated && inAuthGroup) {
       router.replace('/auth/login');
-    } else if (isAuthenticated && !inAuthGroup) {
+    } else if (isAuthenticated && !inAuthGroup && !inProductGroup) {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, segments, loading, router]);

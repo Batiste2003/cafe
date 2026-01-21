@@ -26,6 +26,16 @@ class CreateProductOptionService
             'is_required' => $dto->isRequired,
         ]);
 
+        // Créer les valeurs de l'option si fournies
+        if (!empty($dto->values)) {
+            foreach ($dto->values as $valueData) {
+                $option->values()->create([
+                    'value' => $valueData['value'],
+                    'price_add_cent_ht' => $valueData['price_add_cent_ht'] ?? 0,
+                ]);
+            }
+        }
+
         return $option->load(['product', 'values']);
     }
 }
