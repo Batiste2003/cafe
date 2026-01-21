@@ -75,7 +75,7 @@ const login = async () => {
 
         <div class="flex justify-end w-full">
           <!-- Bouton -->
-          <BaseButton text="Se connecter" variant="primary" @click="login">Se connecter</BaseButton>
+          <BaseButton variant="primary" @click="login">Se connecter</BaseButton>
         </div>
       </div>
     </div>
