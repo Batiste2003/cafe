@@ -42,7 +42,11 @@ const formatDate = (date: string | null) => {
                 >
                   {{ user.name?.charAt(0).toUpperCase() ?? 'U' }}
                 </div>
-                <span class="font-medium text-gray-900">{{ user.name }}</span>
+                <router-link
+                  :to="{ name: 'admin-user-show', params: { id: user.id } }"
+                  class="font-medium text-gray-900"
+                  >{{ user.name }}</router-link
+                >
               </div>
             </td>
             <td class="px-4 py-3 text-gray-500">{{ user.email }}</td>

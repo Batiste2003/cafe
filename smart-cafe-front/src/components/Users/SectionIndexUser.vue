@@ -95,7 +95,7 @@ onMounted(() => {
       <div class="flex flex-col min-[470px]:flex-row items-center gap-3">
         <button
           @click="openModal"
-          class="px-4 py-2 bg-[var(--cafe-primary)] text-white text-xs font-medium rounded-lg hover:bg-[#4a0000] transition-colors duration-200 flex items-center gap-2"
+          class="px-4 py-2 bg--cafe-primary) text-white text-xs font-medium rounded-lg hover:bg-[#4a0000] transition-colors duration-200 flex items-center gap-2"
         >
           <i class="fas fa-user-plus" />
           Ajouter un utilisateur

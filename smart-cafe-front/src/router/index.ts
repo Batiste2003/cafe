@@ -38,6 +38,12 @@ const routes: RouteRecordRaw[] = [
     component: StoreUserView,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/admin/users/:id',
+    name: 'admin-user-show',
+    component: () => import('@/views/Admin/User/ShowUserView.vue'),
+    meta: { requiresAuth: true }, 
+  }
 ]
 
 const router = createRouter({
