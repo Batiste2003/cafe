@@ -34,7 +34,7 @@ Route::prefix('auth')->group(function () {
         ->name('verification.send');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->middleware('auth')
+        ->middleware('auth:sanctum')
         ->name('logout');
 
     Route::get('/me', [AuthenticatedSessionController::class, 'me'])
