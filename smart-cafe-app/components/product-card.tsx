@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useRouter } from "expo-router";
 import { ProductStyles } from "@/styles/cafecard.style";
 import { CafeCardInterface } from "@/types/product.type";
 import { Colors } from "@/constants/theme";
@@ -15,6 +16,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function CafeCard({
+  id,
   name,
   description,
   price,
@@ -22,10 +24,12 @@ export function CafeCard({
   origin,
   tags = [],
   badge,
+  slug,
   index = 0,
 }: CafeCardInterface) {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
+  const router = useRouter();
 
   // Animation values
   const cardScale = useSharedValue(1);
@@ -157,6 +161,7 @@ export function CafeCard({
               ProductStyles.actionButton,
               { backgroundColor: colors.accent },
             ]}
+            onPress={() => router.push(`/product/options?id=${id}`)}
           >
             <Text style={ProductStyles.actionButtonIcon}>→</Text>
           </Pressable>
