@@ -29,7 +29,7 @@ app/Domain/User/
 | Rôle | Valeur | Description |
 |------|--------|-------------|
 | Admin | `admin` | Administrateur - Toutes les permissions |
-| Manager | `manager` | Gestionnaire - Gestion des commandes |
+| Manager | `manager` | Manager - Gestion des commandes |
 | Employer | `employer` | Employé - Consultation des commandes |
 
 ### Permissions par Rôle

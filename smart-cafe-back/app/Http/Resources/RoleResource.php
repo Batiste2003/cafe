@@ -2,15 +2,19 @@
 
 namespace App\Http\Resources;
 
+use App\Domain\User\Enumeration\UserRoleEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RoleResource extends JsonResource
 {
     public function toArray($request): array
     {
+        $roleEnum = UserRoleEnum::tryFrom($this->name);
+
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'label' => $roleEnum?->label() ?? $this->name,
             'guard_name' => $this->guard_name,
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

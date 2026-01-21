@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# Environment files
+.env
+
 # Expo
 .expo/
 dist/
@@ -41,6 +44,9 @@ app-example
 # generated native folders
 /ios
 /android
+
+# VSCode settings
+.vscode/
 
 # codex
 AGENTS.md

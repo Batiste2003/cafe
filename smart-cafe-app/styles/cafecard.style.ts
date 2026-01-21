@@ -1,9 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from "react-native";
 import { CoffeeColors } from "@/constants/theme";
 
-
-// Premium Card Styles
-export const CafeCardStyles = StyleSheet.create({
+export const ProductStyles = StyleSheet.create({
   card: {
     width: Dimensions.get("window").width - 40,
     marginHorizontal: 20,
@@ -144,7 +142,7 @@ export const CafeCardStyles = StyleSheet.create({
 });
 
 // Screen Container Styles
-export const CardScreenStyles = StyleSheet.create({
+export const ProductScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
   },
