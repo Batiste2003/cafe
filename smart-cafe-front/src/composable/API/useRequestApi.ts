@@ -101,6 +101,48 @@ export function useRequestApi() {
     }
   };
 
+  const put = async <T>(
+    endpoint: string,
+    data: Record<string, unknown>,
+    config: AxiosRequestConfig = {},
+    token: string | null = null
+  ): Promise<ApiResult<T>> => {
+    try {
+      await delay(500);
+
+      const response = await axios.put<ApiSuccessResponse<T>>(`${baseURL}${endpoint}`, data, {
+        ...config,
+        headers: {
+          ...getHeaders(token),
+          ...config.headers,
+        },
+      });
+
+      return {
+        data: response.data.data,
+        message: response.data.message,
+        success: response.data.success,
+      };
+    } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.status === 401 &&
+        error.response?.data?.error === "UNAUTHENTICATED"
+      ) {
+        handleAuthError();
+      }
+
+      return {
+        data: null,
+        message:
+          axios.isAxiosError(error) && error.response?.data?.message
+            ? String(error.response.data.message)
+            : "Erreur lors de la requête",
+        success: false,
+      };
+    }
+  };
+
   const patch = async <T>(
     endpoint: string,
     data: Record<string, unknown>,
@@ -154,20 +196,44 @@ export function useRequestApi() {
     }
   };
 
-  const del = async <T>(
+  const del = async (
     endpoint: string,
     config: AxiosRequestConfig = {},
     token: string | null = null
-  ) => {
-    await delay(500);
-    const response = await axios.delete<T>(`${baseURL}${endpoint}`, {
-      ...config,
-      headers: {
-        ...getHeaders(token),
-        ...config.headers,
-      },
-    });
-    return response.data;
+  ): Promise<ApiResult<null>> => {
+    try {
+      await delay(500);
+      const response = await axios.delete<ApiSuccessResponse<null>>(`${baseURL}${endpoint}`, {
+        ...config,
+        headers: {
+          ...getHeaders(token),
+          ...config.headers,
+        },
+      });
+
+      return {
+        data: null,
+        message: response.data.message,
+        success: response.data.success,
+      };
+    } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.status === 401 &&
+        error.response?.data?.error === "UNAUTHENTICATED"
+      ) {
+        handleAuthError();
+      }
+
+      return {
+        data: null,
+        message:
+          axios.isAxiosError(error) && error.response?.data?.message
+            ? String(error.response.data.message)
+            : "Erreur lors de la suppression",
+        success: false,
+      };
+    }
   };
 
   const getFile = async (
@@ -260,6 +326,7 @@ export function useRequestApi() {
   return {
     get,
     post,
+    put,
     login,
     fetchCsrfToken,
     del,

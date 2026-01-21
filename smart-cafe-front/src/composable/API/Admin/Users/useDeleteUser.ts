@@ -1,11 +1,9 @@
 import { ref } from 'vue'
 import { useRequestApi } from '@/composable/API/useRequestApi'
-import type { User } from '@/types/User'
 
-export function useGetShowUser(userId: number) {
-  const { get } = useRequestApi()
+export function useDeleteUser(userId: number) {
+  const { del } = useRequestApi()
 
-  const user = ref<User | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -14,22 +12,20 @@ export function useGetShowUser(userId: number) {
     error.value = null
 
     try {
-      const response = await get<User>(`/api/admin/users/${userId}`)
+      const response = await del(`/api/admin/users/${userId}`)
 
-      if (response.success && response.data) {
-        user.value = response.data
+      if (!response.success) {
+        error.value = response.message
       }
 
       return {
         success: response.success,
-        data: response.data,
         message: response.message,
       }
     } catch {
-      error.value = 'Erreur lors de la récupération des utilisateurs'
+      error.value = "Erreur lors de la suppression de l'utilisateur"
       return {
         success: false,
-        data: null,
         message: error.value,
       }
     } finally {
@@ -38,7 +34,6 @@ export function useGetShowUser(userId: number) {
   }
 
   return {
-    user,
     isLoading,
     error,
     execute,
