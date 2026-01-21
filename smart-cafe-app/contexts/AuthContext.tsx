@@ -1,6 +1,12 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import ApiService from '@/services/api';
-import type { AuthResponse } from '@/services/api';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from "react";
+import ApiService from "@/services/api";
+import type { AuthResponse } from "@/services/api";
 
 interface User {
   id: number;
@@ -13,7 +19,12 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, passwordConfirmation: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -31,12 +42,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async () => {
     try {
       const token = await ApiService.getToken();
-      if (token) {
+
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
         const currentUser = await ApiService.getCurrentUser();
-        setUser(currentUser);
+        setUser(currentUser.user);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur courant:",
+          error,
+        );
+        await ApiService.logout();
+        setUser(null);
       }
     } catch (error) {
-      console.error('Erreur lors de la vérification de l\'authentification:', error);
+      console.error("Erreur lors de la vérification:", error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -45,14 +68,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response: AuthResponse = await ApiService.login({ email, password });
+      const response: AuthResponse = await ApiService.login({
+        email,
+        password,
+      });
       setUser(response.user);
     } catch (error) {
       throw error;
     }
   };
 
-  const register = async (name: string, email: string, password: string, passwordConfirmation: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+  ) => {
     try {
       const response: AuthResponse = await ApiService.register({
         name,
@@ -94,7 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth doit être utilisé dans un AuthProvider');
+    throw new Error("useAuth doit être utilisé dans un AuthProvider");
   }
   return context;
 }
