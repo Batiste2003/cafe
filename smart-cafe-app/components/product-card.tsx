@@ -7,8 +7,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { CafeCardStyles } from "@/styles/cafecard.style";
-import { CafeCardInterface } from "@/types/cafe.type";
+import { ProductStyles } from "@/styles/cafecard.style";
+import { CafeCardInterface } from "@/types/product.type";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
@@ -16,11 +16,12 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function CafeCard({
   name,
-  slug,
   description,
   price,
-  image,
-  category = ["Arabica", "Medium Roast"],
+  imageUrl,
+  origin,
+  tags = [],
+  badge,
   index = 0,
 }: CafeCardInterface) {
   const colorScheme = useColorScheme() ?? "light";
@@ -39,7 +40,7 @@ export function CafeCard({
       delay,
       withSpring(0, { damping: 20, stiffness: 90 })
     );
-  }, []);
+  }, [index, cardOpacity, cardTranslateY]);
 
   // Press animation
   const handlePressIn = () => {
@@ -63,26 +64,31 @@ export function CafeCard({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={[
-        CafeCardStyles.card,
+        ProductStyles.card,
         { backgroundColor: colors.card },
         animatedCardStyle,
       ]}
     >
       {/* Image Section */}
-      <View style={CafeCardStyles.imageContainer}>
-        {image ? (
+      <View style={ProductStyles.imageContainer}>
+        {imageUrl ? (
           <>
             <Image
-              source={{ uri: image }}
-              style={CafeCardStyles.image}
+              source={{ uri: imageUrl }}
+              style={ProductStyles.image}
               resizeMode="cover"
             />
-            <View style={CafeCardStyles.imageOverlay} />
+            <View style={ProductStyles.imageOverlay} />
+            {badge && (
+              <View style={[ProductStyles.badge, { backgroundColor: colors.accent }]}>
+                <Text style={ProductStyles.badgeText}>{badge}</Text>
+              </View>
+            )}
           </>
         ) : (
           <View
             style={[
-              CafeCardStyles.imagePlaceholder,
+              ProductStyles.imagePlaceholder,
               { backgroundColor: colors.backgroundSecondary },
             ]}
           >
@@ -92,21 +98,26 @@ export function CafeCard({
       </View>
 
       {/* Content Section */}
-      <View style={CafeCardStyles.content}>
+      <View style={ProductStyles.content}>
         {/* Header: Title & Price */}
-        <View style={CafeCardStyles.header}>
-          <View style={CafeCardStyles.titleContainer}>
-            <Text style={[CafeCardStyles.title, { color: colors.text }]}>
+        <View style={ProductStyles.header}>
+          <View style={ProductStyles.titleContainer}>
+            <Text style={[ProductStyles.title, { color: colors.text }]}>
               {name}
             </Text>
+            {origin && (
+              <Text style={[ProductStyles.origin, { color: colors.textMuted }]}>
+                {origin}
+              </Text>
+            )}
           </View>
 
-          <View style={CafeCardStyles.priceContainer}>
-            <Text style={[CafeCardStyles.price, { color: colors.accent }]}>
+          <View style={ProductStyles.priceContainer}>
+            <Text style={[ProductStyles.price, { color: colors.accent }]}>
               {price}
             </Text>
             <Text
-              style={[CafeCardStyles.priceLabel, { color: colors.textMuted }]}
+              style={[ProductStyles.priceLabel, { color: colors.textMuted }]}
             >
               par tasse
             </Text>
@@ -115,27 +126,27 @@ export function CafeCard({
 
         {/* Divider */}
         <View
-          style={[CafeCardStyles.divider, { backgroundColor: colors.cardBorder }]}
+          style={[ProductStyles.divider, { backgroundColor: colors.cardBorder }]}
         />
 
         {/* Description */}
         <Text
-          style={[CafeCardStyles.description, { color: colors.textSecondary }]}
+          style={[ProductStyles.description, { color: colors.textSecondary }]}
           numberOfLines={2}
         >
           {description}
         </Text>
 
         {/* Footer: Tags & Action */}
-        <View style={CafeCardStyles.footer}>
-          <View style={CafeCardStyles.tagContainer}>
-            {category.slice(0, 3).map((category, idx) => (
+        <View style={ProductStyles.footer}>
+          <View style={ProductStyles.tagContainer}>
+            {tags.slice(0, 3).map((tag, idx) => (
               <View
                 key={idx}
-                style={[CafeCardStyles.tag, { backgroundColor: colors.accentLight }]}
+                style={[ProductStyles.tag, { backgroundColor: colors.accentLight }]}
               >
-                <Text style={[CafeCardStyles.tagText, { color: colors.accent }]}>
-                  {category}
+                <Text style={[ProductStyles.tagText, { color: colors.accent }]}>
+                  {tag}
                 </Text>
               </View>
             ))}
@@ -143,11 +154,11 @@ export function CafeCard({
 
           <Pressable
             style={[
-              CafeCardStyles.actionButton,
+              ProductStyles.actionButton,
               { backgroundColor: colors.accent },
             ]}
           >
-            <Text style={CafeCardStyles.actionButtonIcon}>→</Text>
+            <Text style={ProductStyles.actionButtonIcon}>→</Text>
           </Pressable>
         </View>
       </View>

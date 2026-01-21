@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dotenv from 'dotenv';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+dotenv.config();
+
 
 interface LoginCredentials {
   email: string;
@@ -55,7 +57,7 @@ class ApiService {
 
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${process.env.API_URL}/auth/login`, {
         method: 'POST',
         headers: await this.getHeaders(),
         body: JSON.stringify(credentials),
@@ -89,7 +91,7 @@ class ApiService {
 
   static async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${process.env.API_URL}/auth/register`, {
         method: 'POST',
         headers: await this.getHeaders(),
         body: JSON.stringify(credentials),
@@ -123,7 +125,7 @@ class ApiService {
 
   static async logout(): Promise<void> {
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
+      await fetch(`${process.env.API_URL}/auth/logout`, {
         method: 'POST',
         headers: await this.getHeaders(true),
       });
@@ -135,7 +137,7 @@ class ApiService {
   }
 
   static async getCurrentUser() {
-    const response = await fetch(`${API_BASE_URL}/user`, {
+    const response = await fetch(`${process.env.API_URL}/user`, {
       method: 'GET',
       headers: await this.getHeaders(true),
     });
@@ -149,6 +151,86 @@ class ApiService {
 
   static async getToken(): Promise<string | null> {
     return await AsyncStorage.getItem('auth_token');
+  }
+
+  // Products endpoints
+  static async getProducts(
+    page: number = 1,
+    perPage: number = 15,
+    filters?: {
+      search?: string;
+      store_id?: number;
+      category_id?: number;
+      is_active?: boolean;
+      is_featured?: boolean;
+    }
+  ) {
+    try {
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: page.toString(),
+        per_page: perPage.toString(),
+      });
+
+      if (filters) {
+        if (filters.search) params.append('search', filters.search);
+        if (filters.store_id) params.append('store_id', filters.store_id.toString());
+        if (filters.category_id) params.append('category_id', filters.category_id.toString());
+        if (filters.is_active !== undefined) params.append('is_active', filters.is_active ? '1' : '0');
+        if (filters.is_featured !== undefined) params.append('is_featured', filters.is_featured ? '1' : '0');
+      }
+
+      const response = await fetch(
+        `${process.env.API_URL}/products?${params.toString()}`,
+        {
+          method: 'GET',
+          headers: await this.getHeaders(true),
+        }
+      );
+
+      const result: ApiSuccessResponse<any> | ApiErrorResponse = await response.json();
+
+      if (!response.ok || !result.success) {
+        const errorResult = result as ApiErrorResponse;
+        const errorMessage = errorResult.errors 
+          ? Object.values(errorResult.errors).flat().join(', ')
+          : errorResult.message || 'Impossible de récupérer les produits';
+        throw new Error(errorMessage);
+      }
+
+      return result as ApiSuccessResponse<any>;
+    } catch (error: any) {
+      console.error('Get products error:', error);
+      throw error;
+    }
+  }
+
+  static async getProduct(productId: number) {
+    try {
+      const response = await fetch(
+        `${process.env.API_URL}/products/${productId}`,
+        {
+          method: 'GET',
+          headers: await this.getHeaders(true),
+        }
+      );
+
+      const result: ApiSuccessResponse<any> | ApiErrorResponse = await response.json();
+
+      if (!response.ok || !result.success) {
+        const errorResult = result as ApiErrorResponse;
+        const errorMessage = errorResult.errors 
+          ? Object.values(errorResult.errors).flat().join(', ')
+          : errorResult.message || 'Impossible de récupérer le produit';
+        throw new Error(errorMessage);
+      }
+
+      const successResult = result as ApiSuccessResponse<any>;
+      return successResult.data;
+    } catch (error: any) {
+      console.error('Get product error:', error);
+      throw error;
+    }
   }
 }
 
