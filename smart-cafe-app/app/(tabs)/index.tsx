@@ -4,10 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Carrousel from '@/src/widgets/carrousel/Carrousel';
 import { CustomHeader } from '@/components/custom-header';
 import { Colors } from '@/constants/theme';
+import { useProducts } from '@/src/hooks/useProduct';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
+
+  const { data: products = [] } = useProducts({
+    page: 1,
+    perPage: 15,
+    filters: { is_active: true },
+  });
+
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
@@ -15,7 +23,7 @@ export default function HomeScreen() {
       <Text style={[styles.heroText, { color: colors.textMuted }]}>
         Le plaisir, en toute simplicité.
       </Text>
-      <Carrousel />
+      <Carrousel products={products} />
     </SafeAreaView >
   );
 };

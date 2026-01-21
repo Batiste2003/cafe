@@ -6,22 +6,16 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CafeCard } from "@/components/product-card";
 import { ProductScreenStyles } from "@/styles/cafecard.style";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import ApiService from "@/services/api";
-import { mapProductToCardInterface, CafeCardInterface } from "@/types/product.type";
+import { useProducts } from "@/src/hooks/useProduct";
 
 export default function CardScreen() {
   const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
-
-  // State management
-  const [products, setProducts] = useState<CafeCardInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   // Header animations
   const headerOpacity = useSharedValue(0);
@@ -29,29 +23,14 @@ export default function CardScreen() {
   const iconScale = useSharedValue(0);
 
   // Fetch products from API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await ApiService.getProducts(1, 15, {
-          is_active: true,
-        });
-        
-        // Transform backend products to card interface
-        const transformedProducts = response.data.map(mapProductToCardInterface);
-        setProducts(transformedProducts);
-      } catch (err: any) {
-        console.error('Error fetching products:', err);
-        setError(err.message || 'Impossible de charger les produits');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: products = [], isLoading, error, refetch } = useProducts({
+    page: 1,
+    perPage: 15,
+    filters: { is_active: true },
+  });
 
-    fetchProducts();
-  }, []);
+  const errorMessage =
+    error instanceof Error ? error.message : "Une erreur est survenue.";
 
   useEffect(() => {
     headerOpacity.value = withTiming(1, { duration: 600 });
@@ -119,7 +98,7 @@ export default function CardScreen() {
         </View>
 
         {/* Loading State */}
-        {loading && (
+        {isLoading && (
           <View style={{ padding: 40, alignItems: 'center' }}>
             <ActivityIndicator size="large" color={colors.accent} />
             <Text style={[{ marginTop: 16, color: colors.textMuted }]}>
@@ -129,17 +108,15 @@ export default function CardScreen() {
         )}
 
         {/* Error State */}
-        {error && !loading && (
+        {error && !isLoading && (
           <View style={{ padding: 40, alignItems: 'center' }}>
             <Text style={[{ color: '#EF4444', fontSize: 16, textAlign: 'center' }]}>
-              {error}
+              {errorMessage}
             </Text>
-            <Text 
+            <Text
               style={[{ marginTop: 12, color: colors.accent, fontSize: 14 }]}
               onPress={() => {
-                setError(null);
-                setLoading(true);
-                // Retry fetch
+                refetch();
               }}
             >
               Réessayer
@@ -148,7 +125,7 @@ export default function CardScreen() {
         )}
 
         {/* Products List */}
-        {!loading && !error && products.length === 0 && (
+        {!isLoading && !error && products.length === 0 && (
           <View style={{ padding: 40, alignItems: 'center' }}>
             <Text style={[{ color: colors.textMuted, fontSize: 16 }]}>
               Aucun produit disponible
@@ -156,7 +133,7 @@ export default function CardScreen() {
           </View>
         )}
 
-        {!loading && !error && products.map((product, index) => (
+        {!isLoading && !error && products.map((product, index) => (
           <CafeCard
             key={product.id}
             id={product.id}

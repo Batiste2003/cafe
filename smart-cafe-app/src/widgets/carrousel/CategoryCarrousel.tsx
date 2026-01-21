@@ -27,7 +27,10 @@ export default function CarrouselCategory({
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.carrousel}
+                contentContainerStyle={[
+                    styles.carrousel,
+                    items.length < 4 && styles.centeredCarrousel,
+                ]}
             >
                 {items.map((item, index) => {
                     const isSelected = index === selectedIndex;
@@ -44,7 +47,12 @@ export default function CarrouselCategory({
                             <View style={[styles.headerIcon, { backgroundColor: colors.background }]}>
                                 <Text style={styles.headerIconSize}>{item.icon}</Text>
                             </View>
-                            <Text style={[styles.headerIconText, { color: colors.backgroundSecondary }]}>{item.text}</Text>
+                            <Text
+                                numberOfLines={1}
+                                style={[styles.headerIconText, { color: colors.backgroundSecondary }]}
+                            >
+                                {item.text}
+                            </Text>
                         </Pressable>
                     );
                 })}
@@ -57,13 +65,19 @@ const styles = StyleSheet.create({
     carrousel: {
         paddingHorizontal: 16,
         flexDirection: 'row',
-        gap: 28
+        gap: 28,
+    },
+    centeredCarrousel: {
+        justifyContent: 'space-around',
+        minWidth: '100%',
+        gap: 0,
     },
     item: {
         gap: 8,
         alignItems: 'center',
         justifyContent: 'flex-end',
         paddingVertical: 8,
+        width: 80,
     },
     headerIcon: {
         width: 64,
@@ -82,6 +96,7 @@ const styles = StyleSheet.create({
     },
     selected: {
         height: 6,
-        width: '100%'
+        width: '100%',
+        borderRadius: 2
     }
 })
