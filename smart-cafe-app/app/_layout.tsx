@@ -16,6 +16,14 @@ function RootLayoutNav() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="auth" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen 
+          name="product/options" 
+          options={{ 
+            headerShown: true, 
+            title: 'Options du produit',
+            presentation: 'card'
+          }} 
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
