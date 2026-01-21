@@ -1,25 +1,20 @@
-<script setup>
-import api from '@/services/api'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseButton from '@/components/BaseButton.vue'
+import { useLoginPost } from '@/composable/API/Auth/useLoginPost'
 
 const router = useRouter()
+const { execute, isLoading, error } = useLoginPost()
+
+const email = ref('')
+const password = ref('')
 
 const login = async () => {
-  try {
-    await api.get('/sanctum/csrf-cookie')
+  const response = await execute({ email: email.value, password: password.value })
 
-    await api.post('/api/auth/login', {
-      email: 'serveur@test.com',
-      password: 'password',
-    })
-
-    const user = await api.get('/api/user')
-    console.log('USER CONNECTÉ :', user.data)
-
-    router.push('/serveur')
-  } catch (error) {
-    console.error('Erreur login', error)
+  if (response.success) {
+    router.push('/takeorder')
   }
 }
 </script>
@@ -47,6 +42,7 @@ const login = async () => {
               >Identifiant</label
             >
             <input
+              v-model="email"
               type="email"
               placeholder="serveur@cafe.com"
               class="w-full px-4 py-3 bg-(--cafe-secondary) transition-normal rounded-full mt-2"
@@ -59,11 +55,17 @@ const login = async () => {
               >Mot de passe</label
             >
             <input
+              v-model="password"
               type="password"
               placeholder="••••••••"
               class="w-full px-4 py-3 bg-(--cafe-secondary) transition-normal rounded-full mt-2"
             />
           </div>
+        </div>
+
+        <!-- Erreur -->
+        <div v-if="error" class="text-red-400 text-sm">
+          {{ error }}
         </div>
 
         <!-- Mot de passe oublié -->
@@ -75,7 +77,14 @@ const login = async () => {
 
         <div class="flex justify-end w-full">
           <!-- Bouton -->
-          <BaseButton variant="primary" @click="login">Se connecter</BaseButton>
+          <BaseButton
+            text="Se connecter"
+            variant="primary"
+            :disabled="isLoading"
+            @click="login"
+          >
+            {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+          </BaseButton>
         </div>
       </div>
     </div>

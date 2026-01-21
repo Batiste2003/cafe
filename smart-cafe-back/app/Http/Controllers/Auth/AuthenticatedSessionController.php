@@ -23,6 +23,7 @@ class AuthenticatedSessionController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
+        $user->load('roles');
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return $this->successService->execute('Login successful', [
@@ -36,5 +37,16 @@ class AuthenticatedSessionController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return $this->successService->execute('Logout successful');
+    }
+
+    public function me(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $user->load('roles');
+
+        return $this->successService->execute('User retrieved successfully', [
+            'user' => new UserResource($user),
+        ]);
     }
 }
