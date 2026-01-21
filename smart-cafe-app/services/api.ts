@@ -1,8 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
+const API_BASE_URL = 'http://localhost:8000/api';
 
 interface LoginCredentials {
   email: string;
@@ -57,7 +55,7 @@ class ApiService {
 
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${process.env.API_URL}/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: await this.getHeaders(),
         body: JSON.stringify(credentials),
@@ -91,7 +89,7 @@ class ApiService {
 
   static async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${process.env.API_URL}/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: await this.getHeaders(),
         body: JSON.stringify(credentials),
@@ -125,7 +123,7 @@ class ApiService {
 
   static async logout(): Promise<void> {
     try {
-      await fetch(`${process.env.API_URL}/auth/logout`, {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
         headers: await this.getHeaders(true),
       });
@@ -137,7 +135,7 @@ class ApiService {
   }
 
   static async getCurrentUser() {
-    const response = await fetch(`${process.env.API_URL}/user`, {
+    const response = await fetch(`${API_BASE_URL}/user`, {
       method: 'GET',
       headers: await this.getHeaders(true),
     });
@@ -181,7 +179,7 @@ class ApiService {
       }
 
       const response = await fetch(
-        `${process.env.API_URL}/products?${params.toString()}`,
+        `${API_BASE_URL}/products?${params.toString()}`,
         {
           method: 'GET',
           headers: await this.getHeaders(true),
@@ -208,7 +206,7 @@ class ApiService {
   static async getProduct(productId: number) {
     try {
       const response = await fetch(
-        `${process.env.API_URL}/products/${productId}`,
+        `${API_BASE_URL}/products/${productId}`,
         {
           method: 'GET',
           headers: await this.getHeaders(true),
