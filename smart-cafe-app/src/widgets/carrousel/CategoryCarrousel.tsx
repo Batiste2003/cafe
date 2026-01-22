@@ -129,8 +129,15 @@ export default function CarrouselCategory({
                             },
                         ]}
                     >
-                        <View style={[styles.headerIcon, { backgroundColor: colors.background }]}>
-                            <Text style={styles.headerIconSize}>{item.icon}</Text>
+                        <View style={[
+                            styles.headerIcon, 
+                            { backgroundColor: colors.background },
+                            isSelected && styles.headerIconSelected
+                        ]}>
+                            <Text style={[
+                                styles.headerIconSize,
+                                isSelected && styles.headerIconSizeSelected
+                            ]}>{item.icon}</Text>
                         </View>
                         <Text
                             numberOfLines={2}
@@ -168,8 +175,23 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    headerIconSelected: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        borderWidth: 3,
+        borderColor: '#C69C6D',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 6,
+    },
     headerIconSize: {
         fontSize: 22,
+    },
+    headerIconSizeSelected: {
+        fontSize: 28,
     },
     headerIconText: {
         fontSize: 10,
