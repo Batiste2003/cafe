@@ -15,10 +15,8 @@ export default function CarrouselProduct({ products, categoryLabel }: Props) {
     const colorScheme = useColorScheme() ?? "light";
     const colors = Colors[colorScheme];
 
-    const itemWidth = `${100 / products.length}%`;
-
     return (
-        <View style={{ marginTop: 16 }}>
+        <View style={styles.container}>
             {products.length === 0 ? (
                 <Text style={[styles.empty, { color: colors.textMuted }]}>
                     Aucun produit dans cette catégorie
@@ -27,7 +25,9 @@ export default function CarrouselProduct({ products, categoryLabel }: Props) {
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
+                    contentContainerStyle={styles.scrollContent}
+                    pagingEnabled
+                    snapToAlignment="center"
                 >
                     {products.map((product) => (
                         <ProductCarouselItem
@@ -35,7 +35,6 @@ export default function CarrouselProduct({ products, categoryLabel }: Props) {
                             icon="☕"
                             name={product.name}
                             price={`${product.price}`}
-                            width={itemWidth}
                         />
                     ))}
                 </ScrollView>
@@ -45,6 +44,14 @@ export default function CarrouselProduct({ products, categoryLabel }: Props) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginTop: -80,
+        alignItems: 'center',
+    },
+    scrollContent: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     title: {
         marginHorizontal: 24,
         marginBottom: 10,

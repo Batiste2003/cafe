@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     card: {
         alignItems: 'center',
         gap: 12,
-        paddingVertical: 32,
+        paddingVertical: 16,
         overflow: 'hidden',
     },
     iconWrapper: {

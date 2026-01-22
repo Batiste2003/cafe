@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import CategoryCarrousel from './CategoryCarrousel';
-import { View } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import ProductCarrousel from './ProductCarrousel';
 import { CafeCardInterface } from '@/types/product.type';
+import { Colors } from '@/constants/theme';
 
 type Props = {
   products: CafeCardInterface[];
@@ -23,6 +24,8 @@ function iconForCategory(label: string): string {
 }
 
 export default function Carrousel({ products }: Props) {
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
 
   const categories = useMemo(() => {
     const map = new Map<string, { id: string; text: string; icon: string }>();
@@ -56,7 +59,7 @@ export default function Carrousel({ products }: Props) {
   }
 
   return (
-    <View>
+    <View style={[styles.container, { backgroundColor: colors.accent }]}>
       <CategoryCarrousel
         items={categories}
         selectedIndex={selectedCategoryIndex}
@@ -65,6 +68,15 @@ export default function Carrousel({ products }: Props) {
 
       {/* Product carrousel */}
       <ProductCarrousel products={filteredProducts} categoryLabel={selectedCategory.text} />
-    </View >
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    overflow: 'hidden',
+    flex: 1,
+  },
+});
