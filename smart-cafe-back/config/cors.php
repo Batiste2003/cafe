@@ -19,9 +19,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => array_filter([
+        env('FRONTEND_URL', 'http://localhost:5173'),
+        env('MOBILE_URL', 'http://localhost:8081'),
+    ]),
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '/^http:\/\/localhost:\d+$/',  // Allow any localhost port in development
+    ],
 
     'allowed_headers' => ['*'],
 
